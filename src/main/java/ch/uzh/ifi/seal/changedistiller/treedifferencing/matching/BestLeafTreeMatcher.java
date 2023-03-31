@@ -34,6 +34,8 @@ import ch.uzh.ifi.seal.changedistiller.treedifferencing.matching.measure.NodeSim
 import ch.uzh.ifi.seal.changedistiller.treedifferencing.matching.measure.StringSimilarityCalculator;
 import ch.uzh.ifi.seal.changedistiller.treedifferencing.matching.measure.TokenBasedCalculator;
 
+import javax.swing.tree.TreeNode;
+
 /**
  * Implementation of the best matching tree matcher.
  * 
@@ -117,12 +119,12 @@ public class BestLeafTreeMatcher implements TreeMatcher {
 
     @SuppressWarnings("unchecked")
     private void matchNodes(Node left, Node right) {
-        for (Enumeration<Node> leftNodes = left.postorderEnumeration(); leftNodes.hasMoreElements();) {
-            Node x = leftNodes.nextElement();
+        for (Enumeration<TreeNode> leftNodes = left.postorderEnumeration(); leftNodes.hasMoreElements();) {
+            Node x = (Node)leftNodes.nextElement();
             if (!x.isMatched() && (!x.isLeaf() || x.isRoot())) {
-                for (Enumeration<Node> rightNodes = right.postorderEnumeration(); rightNodes.hasMoreElements()
+                for (Enumeration<TreeNode> rightNodes = right.postorderEnumeration(); rightNodes.hasMoreElements()
                         && !x.isMatched();) {
-                    Node y = rightNodes.nextElement();
+                    Node y = (Node)rightNodes.nextElement();
                     if ((!y.isMatched() && (!y.isLeaf() || y.isRoot())) && equal(x, y)) {
                         fMatch.add(new NodePair(x, y));
                         x.enableMatched();
@@ -148,11 +150,11 @@ public class BestLeafTreeMatcher implements TreeMatcher {
     @SuppressWarnings("unchecked")
     private List<LeafPair> matchLeaves(Node left, Node right) {
         List<LeafPair> matchedLeafs = new ArrayList<LeafPair>();
-        for (Enumeration<Node> leftNodes = left.postorderEnumeration(); leftNodes.hasMoreElements();) {
-            Node x = leftNodes.nextElement();
+        for (Enumeration<TreeNode> leftNodes = left.postorderEnumeration(); leftNodes.hasMoreElements();) {
+            Node x = (Node)leftNodes.nextElement();
             if (x.isLeaf()) {
-                for (Enumeration<Node> rightNodes = right.postorderEnumeration(); rightNodes.hasMoreElements();) {
-                    Node y = rightNodes.nextElement();
+                for (Enumeration<TreeNode> rightNodes = right.postorderEnumeration(); rightNodes.hasMoreElements();) {
+                    Node y = (Node)rightNodes.nextElement();
                     if (y.isLeaf() && haveSameLabel(x, y)) {
                         double similarity = 0;
 

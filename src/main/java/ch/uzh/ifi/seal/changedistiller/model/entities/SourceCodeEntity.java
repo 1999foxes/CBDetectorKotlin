@@ -47,7 +47,9 @@ public class SourceCodeEntity {
     private EntityType fType;
     private int fModifiers;
     private List<SourceCodeEntity> fAssociatedEntities;
-    private SourceRange fRange;
+    public SourceRange fRange;
+
+//    public
 
     /**
      * Constructor to initialize a source code entity with a unique name and a type.

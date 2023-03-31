@@ -1,7 +1,10 @@
-import cross.language.algorithm.HungarianAlgorithm;
+import cross.language.algorithm.HungarianAlgorithmKt;
+import kotlin.Pair;
 
 import java.util.Arrays;
 import java.util.List;
+
+import static cross.language.algorithm.HungarianAlgorithmKt.hungarianAlgorithm;
 
 public class testHungarian {
 
@@ -12,8 +15,8 @@ public class testHungarian {
     /*1500 4000 4500
 	  2000 6000 3500
 	  2000 4000 2500*/
-        HungarianAlgorithm ob = new HungarianAlgorithm(list);
-        System.out.println(ob.getFinalCost());
-        System.out.println(ob.getFinalAssignment());
+        Pair ob = hungarianAlgorithm(list);
+        System.out.println(ob.component1());
+        System.out.println(ob.component2());
     }
 }

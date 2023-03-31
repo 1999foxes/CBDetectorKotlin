@@ -26,6 +26,8 @@ import java.util.Set;
 import ch.uzh.ifi.seal.changedistiller.treedifferencing.Node;
 import ch.uzh.ifi.seal.changedistiller.treedifferencing.NodePair;
 
+import javax.swing.tree.TreeNode;
+
 /**
  * Implementation of the default inner node similarity calculator proposed by Chawathe.
  * 
@@ -66,9 +68,9 @@ public class ChawatheCalculator implements NodeSimilarityCalculator {
     private int numberOfCommentNodes(Node node) {
         int count = 0;
 
-        Enumeration<Node> nodes = node.breadthFirstEnumeration();
+        Enumeration<TreeNode> nodes = node.breadthFirstEnumeration();
         while (nodes.hasMoreElements()) {
-            Node child = nodes.nextElement();
+            Node child = (Node)nodes.nextElement();
             if (isComment(child)) {
                 count++;
             }

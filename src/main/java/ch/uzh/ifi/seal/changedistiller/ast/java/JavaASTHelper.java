@@ -49,6 +49,8 @@ import ch.uzh.ifi.seal.changedistiller.treedifferencing.Node;
 import com.google.inject.Inject;
 import com.google.inject.assistedinject.Assisted;
 
+import cross.language.DistillingKt;
+
 /**
  * Implementation of {@link ASTHelper} for the Java programming language.
  * 
@@ -62,6 +64,8 @@ public class JavaASTHelper implements ASTHelper<JavaStructureNode> {
     private JavaASTNodeTypeConverter fASTHelper;
     private JavaCompilation fCompilation;
     private List<Comment> fComments;
+
+    private List<Node> nodePublisher = DistillingKt.getNodePublisher();
 
     @Inject
     JavaASTHelper(
@@ -122,6 +126,7 @@ public class JavaASTHelper implements ASTHelper<JavaStructureNode> {
         } else if (astNode instanceof FieldDeclaration) {
             ((FieldDeclaration) astNode).traverse(fDeclarationConverter, null);
         }
+        nodePublisher.add(root);
         return root;
     }
 
@@ -146,6 +151,7 @@ public class JavaASTHelper implements ASTHelper<JavaStructureNode> {
             Node root = createRootNode(node, astNode);
             fBodyConverter.initialize(root, astNode, fComments, fCompilation.getScanner());
             ((AbstractMethodDeclaration) astNode).traverse(fBodyConverter, (ClassScope) null);
+            nodePublisher.add(root);
             return root;
         }
         return null;

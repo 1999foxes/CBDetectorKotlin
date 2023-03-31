@@ -18,7 +18,7 @@ repositories {
 
 dependencies {
     testImplementation(kotlin("test"))
-    implementation("org.antlr:antlr4:4.12.0")
+    implementation("org.antlr:antlr4:4.9.2")
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.4.1")
     implementation(fileTree(mapOf("dir" to "libs", "include" to listOf("*.jar"))))
 

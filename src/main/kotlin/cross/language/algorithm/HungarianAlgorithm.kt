@@ -4,7 +4,7 @@ import java.util.*
 import kotlin.math.sqrt
 
 
-class HungarianAlgorithm(val input: List<Int>) {
+fun hungarianAlgorithm(input: List<Int>): Pair<Int, List<Int>> {
     var n = 0
     lateinit var cost: Array<IntArray> //cost matrix
     var max_match = 0 //n workers and n jobs
@@ -178,37 +178,34 @@ class HungarianAlgorithm(val input: List<Int>) {
         }
     } //end of augment() function
 
-    init {
-        // init collections
-        n = sqrt(input.size.toDouble()).toInt()
-        cost = Array(n) { IntArray(n) }
-        lx = IntArray(n)
-        ly = IntArray(n)
-        S = BooleanArray(n)
-        T = BooleanArray(n)
-        slack = IntArray(n)
-        slackx = IntArray(n)
-        prev_ious = IntArray(n)
-        for (i in 0 until n) for (j in 0 until n) cost[i][j] =
-            -1 * input[i * n + j]
+    n = sqrt(input.size.toDouble()).toInt()
+    cost = Array(n) { IntArray(n) }
+    lx = IntArray(n)
+    ly = IntArray(n)
+    S = BooleanArray(n)
+    T = BooleanArray(n)
+    slack = IntArray(n)
+    slackx = IntArray(n)
+    prev_ious = IntArray(n)
+    for (i in 0 until n) for (j in 0 until n) cost[i][j] =
+        -1 * input[i * n + j]
 
-        // hungarian algorithm
-        max_match = 0 //number of vertices in current matching
-        xy = IntArray(n)
-        yx = IntArray(n)
-        Arrays.fill(xy, -1)
-        Arrays.fill(yx, -1)
-        init_labels() //step 0
-        augment() //steps 1-3
+    // hungarian algorithm
+    max_match = 0 //number of vertices in current matching
+    xy = IntArray(n)
+    yx = IntArray(n)
+    Arrays.fill(xy, -1)
+    Arrays.fill(yx, -1)
+    init_labels() //step 0
+    augment() //steps 1-3
 
-        // calculate result
-        finalAssignment.clear()    // optimal matching
-        finalCost = 0      //weight of the optimal matching
-        for (x in 0 until n) {//forming answer there
-            finalAssignment.add(x, xy[x])
-            finalCost += cost[x][xy[x]]
-        }
-        finalCost *= -1
+    // calculate result
+    finalAssignment.clear()    // optimal matching
+    finalCost = 0      //weight of the optimal matching
+    for (x in 0 until n) {//forming answer there
+        finalAssignment.add(x, xy[x])
+        finalCost += cost[x][xy[x]]
     }
-
+    finalCost *= -1
+    return Pair(finalCost, finalAssignment)
 }

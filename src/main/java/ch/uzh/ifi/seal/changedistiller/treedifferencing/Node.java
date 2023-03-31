@@ -25,6 +25,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import javax.swing.tree.DefaultMutableTreeNode;
+import javax.swing.tree.TreeNode;
 
 import ch.uzh.ifi.seal.changedistiller.model.classifiers.EntityType;
 import ch.uzh.ifi.seal.changedistiller.model.entities.SourceCodeEntity;
@@ -187,8 +188,8 @@ public class Node extends DefaultMutableTreeNode {
         output.append(getValue());
         if (!isLeaf()) {
             output.append(" { ");
-            for (Iterator<Node> it = children.iterator(); it.hasNext();) {
-                Node child = it.next();
+            for (Iterator<TreeNode> it = children.iterator(); it.hasNext();) {
+                Node child = (Node)it.next();
                 child.print(output);
                 if (it.hasNext()) {
                     output.append(",");
