@@ -10,7 +10,6 @@ import cross.language.utils.getFilesInFolder
 import java.io.File
 
 
-
 fun distill() {
     val patches: List<FileInfo> = getFilesInFolder("./data/patches/")
     var count = 0
@@ -25,65 +24,56 @@ fun distill() {
             continue
         }
 
-        if (count++ > 0) break  // debug
+        if (count++ > 50) break  // debug
         val changes = distillerRun(left, right)
 
         for (change in changes) {
             println(change)
-            println(getOldRoute(change))
-            println(getNewRoute(change))
-        }
-    }
-}
-
-private val nodePublisherList: MutableList<MutableList<Node>> = mutableListOf()
-fun getNodePublisher(): MutableList<Node> {
-    val publisher = mutableListOf<Node>()
-    nodePublisherList.add(publisher)
-    return publisher
-}
-
-private fun getOldRoute(change: SourceCodeChange): List<Node> {
-    val route = mutableListOf<Node>()
-    if (change is Delete || change is Move || change is Update) {
-        nodePublisherList[0].forEach { node ->
-            if (nodeDFSWithRoute(node, route) {
-                    it.entity == change.changedEntity
-                }) {
-                return route
+            println("old")
+            getOldRoute(change).forEach {
+                println(it.label)
+                println("    " + it.value)
+            }
+            println("new")
+            getNewRoute(change).forEach {
+                println(it.label)
+                println("    " + it.value)
             }
         }
     }
-    return route
+}
+
+private fun getOldRoute(change: SourceCodeChange): List<Node> {
+    if (change is Update) {
+        println("change:::::" + change.changedEntity)
+        println("changed node::::" + change.changedEntity.node)
+    }
+    val route = mutableListOf<Node>()
+    var node = if (change is Delete || change is Move || change is Update) {
+        change.changedEntity.node
+    } else {
+        null
+    }
+    while (node != null) {
+        route.add(node)
+        node = node.parent as Node?
+    }
+    return route.reversed()
 }
 
 private fun getNewRoute(change: SourceCodeChange): List<Node> {
     val route = mutableListOf<Node>()
-    if (change is Insert || change is Move || change is Update) {
-        nodePublisherList[1].forEach { node ->
-            if (nodeDFSWithRoute(node, route) {
-                    it.entity == change.changedEntity
-                }) {
-                return route
-            }
-        }
+    var node = when (change) {
+        is Insert -> change.changedEntity.node
+        is Move -> change.newEntity.node
+        is Update -> change.newEntity.node
+        else -> null
     }
-    return route
-}
-
-private fun nodeDFSWithRoute(node: Node, route: MutableList<Node>, callback: (Node) -> Boolean): Boolean {
-    route.add(node)
-    if (callback(node)) {
-        return true
-    } else {
-        for (child in node.children()) {
-            if (nodeDFSWithRoute(child as Node, route, callback)) {
-                return true
-            }
-        }
-        route.removeLast()
-        return false
+    while (node != null) {
+        route.add(node)
+        node = node.parent as Node?
     }
+    return route.reversed()
 }
 
 fun distillerRun(left: File, right: File): List<SourceCodeChange> {

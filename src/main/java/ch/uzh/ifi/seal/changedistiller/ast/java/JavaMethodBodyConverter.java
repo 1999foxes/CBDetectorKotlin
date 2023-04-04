@@ -854,7 +854,9 @@ public class JavaMethodBodyConverter extends ASTVisitor {
 
     private void push(EntityType label, String value, int start, int end) {
         Node n = new Node(label, value.trim());
-        n.setEntity(new SourceCodeEntity(value.trim(), label, new SourceRange(start, end)));
+        SourceCodeEntity entity = new SourceCodeEntity(value.trim(), label, new SourceRange(start, end));
+        n.setEntity(entity);
+        entity.setNode(n);
         getCurrentParent().add(n);
         fNodeStack.push(n);
     }

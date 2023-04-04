@@ -1,5 +1,6 @@
 package parseTest;
 
+import org.antlr.v4.gui.TreeViewer;
 import org.antlr.v4.runtime.CharStream;
 import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CommonTokenStream;
@@ -8,7 +9,9 @@ import org.antlr.v4.runtime.tree.ParseTreeWalker;
 import parsers.csharp.CSharpLexer;
 import parsers.csharp.CSharpParser;
 
+import javax.swing.*;
 import java.io.IOException;
+import java.util.Arrays;
 
 public class csharpTest {
     public static void main(String[] args) throws IOException {
@@ -17,6 +20,17 @@ public class csharpTest {
         CommonTokenStream tokens = new CommonTokenStream(lexer);
         CSharpParser parser = new CSharpParser(tokens);
         ParseTree tree = parser.compilation_unit();
+
+        JFrame frame = new JFrame("Antlr AST");
+        JPanel panel = new JPanel();
+        TreeViewer viewer = new TreeViewer(Arrays.asList(
+                parser.getRuleNames()),tree);
+        viewer.setScale(1.5); // Scale a little
+        panel.add(viewer);
+        frame.add(panel);
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.pack();
+        frame.setVisible(true);
 
         ParseTreeWalker walker = new ParseTreeWalker();
         CSharpListener listener = new CSharpListener(parser);

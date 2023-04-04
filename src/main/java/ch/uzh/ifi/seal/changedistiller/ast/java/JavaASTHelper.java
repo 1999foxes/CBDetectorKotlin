@@ -21,6 +21,7 @@ package ch.uzh.ifi.seal.changedistiller.ast.java;
  */
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.jdt.internal.compiler.ast.ASTNode;
@@ -65,7 +66,9 @@ public class JavaASTHelper implements ASTHelper<JavaStructureNode> {
     private JavaCompilation fCompilation;
     private List<Comment> fComments;
 
-    private List<Node> nodePublisher = DistillingKt.getNodePublisher();
+    public static ArrayList<ArrayList<Node>> nodePublisherBuffer = new ArrayList<>();
+    private ArrayList<Node> nodePublisher = new ArrayList<>();
+
 
     @Inject
     JavaASTHelper(
@@ -90,6 +93,11 @@ public class JavaASTHelper implements ASTHelper<JavaStructureNode> {
         fASTHelper = astHelper;
         fDeclarationConverter = declarationConverter;
         fBodyConverter = bodyConverter;
+
+        if (nodePublisherBuffer.size() == 2) {
+            nodePublisherBuffer.clear();
+        }
+        nodePublisherBuffer.add(nodePublisher);
     }
     
     private void prepareComments() {
@@ -140,7 +148,9 @@ public class JavaASTHelper implements ASTHelper<JavaStructureNode> {
 
     private Node createRootNode(JavaStructureNode node, ASTNode astNode) {
         Node root = new Node(fASTHelper.convertNode(astNode), node.getFullyQualifiedName());
-        root.setEntity(createSourceCodeEntity(node));
+        SourceCodeEntity entity = createSourceCodeEntity(node);
+        root.setEntity(entity);
+        entity.setNode(root);
         return root;
     }
 

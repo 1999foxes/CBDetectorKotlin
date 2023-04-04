@@ -23,6 +23,7 @@ package ch.uzh.ifi.seal.changedistiller.model.entities;
 import java.util.LinkedList;
 import java.util.List;
 
+import ch.uzh.ifi.seal.changedistiller.treedifferencing.Node;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
@@ -48,6 +49,16 @@ public class SourceCodeEntity {
     private int fModifiers;
     private List<SourceCodeEntity> fAssociatedEntities;
     public SourceRange fRange;
+
+    private Node fNode;
+
+    public void setNode(Node node) {
+        fNode = node;
+    }
+
+    public Node getNode() {
+        return fNode;
+    }
 
 //    public
 
