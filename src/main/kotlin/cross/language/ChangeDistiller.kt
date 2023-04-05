@@ -8,7 +8,6 @@ import com.google.inject.Guice
 import cross.language.utils.FileInfo
 import cross.language.utils.getFilesInFolder
 import java.io.File
-import javax.swing.tree.DefaultMutableTreeNode
 
 
 fun distill() {
@@ -26,26 +25,14 @@ fun distill() {
         }
 
         if (count++ > 50) break  // debug
-        val changes = distillerRun(left, right)
+        val changes = changeDistillerRun(left, right)
 
         for (change in changes) {
             println(change)
-//            println("old")
-//            getOldRoute(change).forEach {
-//                println(it.label)
-//                println("    " + it.value)
-//            }
-//            println("new")
-//            getNewRoute(change).forEach {
-//                println(it.label)
-//                println("    " + it.value)
-//            }
             if (change.changedEntity.node == null) {
                 continue
             }
-
             printTreeNode(change.changedEntity.node.root as Node)
-            1
         }
     }
 }
@@ -64,40 +51,7 @@ fun printTreeNode(node: Node, indent: String = "", isLast: Boolean = true) {
     }
 }
 
-private fun getOldRoute(change: SourceCodeChange): List<Node> {
-    if (change is Update) {
-        println("change:::::" + change.changedEntity)
-        println("changed node::::" + change.changedEntity.node)
-    }
-    val route = mutableListOf<Node>()
-    var node = if (change is Delete || change is Move || change is Update) {
-        change.changedEntity.node
-    } else {
-        null
-    }
-    while (node != null) {
-        route.add(node)
-        node = node.parent as Node?
-    }
-    return route.reversed()
-}
-
-private fun getNewRoute(change: SourceCodeChange): List<Node> {
-    val route = mutableListOf<Node>()
-    var node = when (change) {
-        is Insert -> change.changedEntity.node
-        is Move -> change.newEntity.node
-        is Update -> change.newEntity.node
-        else -> null
-    }
-    while (node != null) {
-        route.add(node)
-        node = node.parent as Node?
-    }
-    return route.reversed()
-}
-
-fun distillerRun(left: File, right: File): List<SourceCodeChange> {
+fun changeDistillerRun(left: File, right: File): List<SourceCodeChange> {
     val injector = Guice.createInjector(JavaChangeDistillerModule())
     val distiller = injector.getInstance(FileDistiller::class.java)
     try {
@@ -106,9 +60,5 @@ fun distillerRun(left: File, right: File): List<SourceCodeChange> {
         System.err.println("Warning: error while change distilling. " + e.message)
     }
     val changes = distiller.sourceCodeChanges ?: emptyList()
-//    changes.forEach {
-//        println(it.rootEntity)
-//        println(it)
-//    }
     return changes
 }

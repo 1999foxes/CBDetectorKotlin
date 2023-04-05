@@ -1,0 +1,1 @@
+找到JavaEntityType和RosylnAPI对应关系

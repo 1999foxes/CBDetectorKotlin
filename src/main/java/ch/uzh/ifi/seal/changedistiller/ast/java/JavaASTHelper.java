@@ -50,8 +50,6 @@ import ch.uzh.ifi.seal.changedistiller.treedifferencing.Node;
 import com.google.inject.Inject;
 import com.google.inject.assistedinject.Assisted;
 
-import cross.language.DistillingKt;
-
 /**
  * Implementation of {@link ASTHelper} for the Java programming language.
  * 
