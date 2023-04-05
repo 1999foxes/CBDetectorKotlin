@@ -8,6 +8,7 @@ import com.google.inject.Guice
 import cross.language.utils.FileInfo
 import cross.language.utils.getFilesInFolder
 import java.io.File
+import javax.swing.tree.DefaultMutableTreeNode
 
 
 fun distill() {
@@ -29,17 +30,37 @@ fun distill() {
 
         for (change in changes) {
             println(change)
-            println("old")
-            getOldRoute(change).forEach {
-                println(it.label)
-                println("    " + it.value)
+//            println("old")
+//            getOldRoute(change).forEach {
+//                println(it.label)
+//                println("    " + it.value)
+//            }
+//            println("new")
+//            getNewRoute(change).forEach {
+//                println(it.label)
+//                println("    " + it.value)
+//            }
+            if (change.changedEntity.node == null) {
+                continue
             }
-            println("new")
-            getNewRoute(change).forEach {
-                println(it.label)
-                println("    " + it.value)
-            }
+
+            printTreeNode(change.changedEntity.node.root as Node)
+            1
         }
+    }
+}
+
+fun printTreeNode(node: Node, indent: String = "", isLast: Boolean = true) {
+    val stringPrefix = "$indent${if (isLast) "└── " else "├── "}"
+    val stringLabel = "${(node.label)}  "
+    val stringValue = node.value.replace("\n", "\n${indent}│    ${" ".repeat(node.label.toString().length)}┆")
+    println(stringPrefix + stringLabel + stringValue)
+    val children = node.children()
+    while (children.hasMoreElements()) {
+        val childNode = children.nextElement()
+        val isLastChild = !children.hasMoreElements()
+        val childIndent = "$indent${if (isLast) "    " else "│   "}"
+        printTreeNode(childNode as Node, childIndent, isLastChild)
     }
 }
 
