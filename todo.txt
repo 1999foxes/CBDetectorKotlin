@@ -1,1 +1,6 @@
-找到JavaEntityType和RosylnAPI对应关系
+从C#AST中获取:
+用JavaStructureNode表示的class, interface, field, property, method,
+用Node表示的,简化过的AST树,保留控制流,其余均为statement.
+
+从JavaASTHelper中获取：
+用Node表示的,简化过的AST树,保留控制流,其余均为statement.

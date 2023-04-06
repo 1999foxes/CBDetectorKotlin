@@ -40,7 +40,10 @@ fun distill() {
 fun printTreeNode(node: Node, indent: String = "", isLast: Boolean = true) {
     val stringPrefix = "$indent${if (isLast) "└── " else "├── "}"
     val stringLabel = "${(node.label)}  "
-    val stringValue = node.value.replace("\n", "\n${indent}│    ${" ".repeat(node.label.toString().length)}┆")
+    val stringValue = node.value.replace(
+        "\n",
+        "\n${indent}${if (isLast) "    " else "│   "}${if (node.children().toList().isEmpty()) " " else "│"}${" ".repeat(node.label.toString().length)}┆"
+    )
     println(stringPrefix + stringLabel + stringValue)
     val children = node.children()
     while (children.hasMoreElements()) {

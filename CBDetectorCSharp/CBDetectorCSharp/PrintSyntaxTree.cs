@@ -30,19 +30,27 @@ namespace CBDetectorCSharp
             public string Label;
             public int Start;
             public int End;
+            public string Identifier;
             public List<Node> Children = new List<Node>();
-
-            public Node(int start, int end)
-            {
-                this.Start = start;
-                this.End = end;
-            }
 
             public Node(SyntaxNode syntaxNode)
             {
                 this.Label = syntaxNode.GetType().Name;
                 this.Start = syntaxNode.Span.Start;
                 this.End = syntaxNode.Span.End;
+
+                // get identifier if exists
+                var type = syntaxNode.GetType();
+                var identifierProperty = type.GetProperty("Identifier");
+                if (identifierProperty != null)
+                {
+                    var identifier = (SyntaxToken)identifierProperty.GetValue(syntaxNode);
+                    this.Identifier = identifier.Text;
+                } else
+                {
+                    this.Identifier = "";
+                }
+
 
                 foreach (SyntaxNode childSyntaxNode in syntaxNode.ChildNodes())
                 {
