@@ -13,28 +13,42 @@ import java.io.File
 fun distill() {
     val patches: List<FileInfo> = getFilesInFolder("./data/patches/")
     var count = 0
+    var countChangedFile = 0
+    var countChange = 0
     for (patchInfo in patches) {
-        if (patchInfo.absolutePath.contains("\\from\\").not()) {
+        val path = patchInfo.absolutePath
+        if (path.contains("\\from\\").not() || path.endsWith(".java").not()) {
             continue
         }
 
-        val left = File(patchInfo.absolutePath)
-        val right = File(patchInfo.absolutePath.replace("\\from\\", "\\to\\"))
+        val left = File(path)
+        val right = File(path.replace("\\from\\", "\\to\\"))
         if (right.exists().not()) {
             continue
         }
 
-        if (count++ > 50) break  // debug
         val changes = changeDistillerRun(left, right)
 
-        for (change in changes) {
-            println(change)
-            if (change.changedEntity.node == null) {
-                continue
-            }
-            printTreeNode(change.changedEntity.node.root as Node)
+//        for (change in changes) {
+//            println(change)
+//            if (change.changedEntity.node == null) {
+//                continue
+//            }
+//            printTreeNode(change.changedEntity.node.root as Node)
+//        }
+        count++
+        println(count)
+        if (changes.isNotEmpty()) {
+            countChangedFile++
+            countChange += changes.size
         }
+//        if (count > 50) {
+//            break
+//        }
     }
+    println("changed files: $countChangedFile")
+    println("change: $countChange")
+    println("total: $count")
 }
 
 fun printTreeNode(node: Node, indent: String = "", isLast: Boolean = true) {

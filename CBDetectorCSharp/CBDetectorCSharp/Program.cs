@@ -13,7 +13,8 @@ namespace CBDetectorCSharp
         static void Main(string[] args)
         {
             // PrintMethodName.Print();
-            PrintSyntaxTree.Print(args[0]);
+            // PrintSyntaxTree.Print(args[0]);
+            Class1.Print();
         }
     }
 }

@@ -101,7 +101,10 @@ public enum JavaEntityType implements EntityType {
     WHILE_STATEMENT(true),
     WILDCARD_TYPE(true),
     FOR_INIT(true),
-    FOR_INCR(true);
+    FOR_INCR(true),
+    LEAF_STATEMENT(true);
+
+
 
     private final boolean fIsValidChange;
 

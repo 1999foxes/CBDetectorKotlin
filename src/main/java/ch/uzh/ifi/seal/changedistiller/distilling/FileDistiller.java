@@ -34,7 +34,6 @@ import ch.uzh.ifi.seal.changedistiller.structuredifferencing.StructureDiffNode;
 import ch.uzh.ifi.seal.changedistiller.structuredifferencing.StructureDifferencer;
 import ch.uzh.ifi.seal.changedistiller.structuredifferencing.StructureNode;
 
-import ch.uzh.ifi.seal.changedistiller.structuredifferencing.java.JavaStructureNode;
 import com.google.inject.Inject;
 
 /**
@@ -171,7 +170,7 @@ public class FileDistiller {
         return fClassHistory;
     }
 
-    public ASTHelper<StructureNode> getAST(File file) {
+    public ASTHelper<StructureNode> getASTHelper(File file) {
         ASTHelper<StructureNode> astHelper = fASTHelperFactory.create(file, "default");
         return astHelper;
     }

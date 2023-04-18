@@ -27,29 +27,35 @@ namespace CBDetectorCSharp
 
         public class Node
         {
-            public string Label;
+            public string Type;
             public int Start;
             public int End;
             public string Identifier;
+            public string Kind;
             public List<Node> Children = new List<Node>();
 
-            public Node(SyntaxNode syntaxNode)
+            private String GetProperty(SyntaxNode syntaxNode, String propertyName)
             {
-                this.Label = syntaxNode.GetType().Name;
-                this.Start = syntaxNode.Span.Start;
-                this.End = syntaxNode.Span.End;
-
-                // get identifier if exists
                 var type = syntaxNode.GetType();
-                var identifierProperty = type.GetProperty("Identifier");
+                var identifierProperty = type.GetProperty(propertyName);
                 if (identifierProperty != null)
                 {
                     var identifier = (SyntaxToken)identifierProperty.GetValue(syntaxNode);
-                    this.Identifier = identifier.Text;
-                } else
-                {
-                    this.Identifier = "";
+                    return identifier.Text;
                 }
+                return "";
+            }
+
+            public Node(SyntaxNode syntaxNode)
+            {
+                this.Type = syntaxNode.GetType().Name;
+                this.Start = syntaxNode.Span.Start;
+                this.End = syntaxNode.Span.End;
+                this.Kind = syntaxNode.Kind().ToString();
+
+                // get identifier if exists
+                this.Identifier = GetProperty(syntaxNode, "Identifier");
+
 
 
                 foreach (SyntaxNode childSyntaxNode in syntaxNode.ChildNodes())
@@ -66,8 +72,8 @@ namespace CBDetectorCSharp
             public void Print(string src, string indent = "", bool isLast = true)
             {
                 string stringPrefix = $"{indent}{(isLast ? "└── " : "├── ")}";
-                string stringLabel = $"{(this.Label)}  ";
-                string stringValue = src.Substring(this.Start, this.End - this.Start).Replace("\n", $"\n{indent}{(isLast ? " " : "│")}    {new string(' ', this.Label.ToString().Length)}┆");
+                string stringLabel = $"{(this.Type)},{this.Kind},{this.Identifier},";
+                string stringValue = src.Substring(this.Start, this.End - this.Start).Replace("\n", $"\n{indent}{(isLast ? " " : "│")}    {new string(' ', stringLabel.ToString().Length)}┆");
                 System.Console.WriteLine(stringPrefix + stringLabel + stringValue);
                 for (int i = 0; i < this.Children.Count; i++)
                 {
